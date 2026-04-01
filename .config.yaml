@@ -1,0 +1,6 @@
+llm:
+  provider: openai
+  models:
+    openai:
+      model_name: "gpt-5.4-nano"
+      temperature: 0

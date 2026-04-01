@@ -1,0 +1,22 @@
+[project]
+name = "ner-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "evaluate==0.4.6",
+    "ipykernel==6.29",
+    "langchain==0.3.27",
+    "langchain-core==0.3.79",
+    "langchain-openai>=0.3.35",
+    "langgraph>=1.0.1",
+    "mlflow==1.27.0",
+    "protobuf==4.25.3",
+    "python-dotenv==1.2.1",
+    "seqeval>=1.2.2",
+    "setuptools<=81.0.0",
+    "skweak>=0.3.3",
+    "spacy>=3.8.13",
+    "transformers==5.1.0",
+]
