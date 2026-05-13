@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    container_name: mlflow_tracker
+    ports:
+      - "5001:5000"
+    command: >
+      mlflow server 
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root mlflow-artifacts:/
+      --artifacts-destination /mlflow/artifacts
+      --host 0.0.0.0
+    volumes:
+      - ./mlflow_data:/mlflow
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"

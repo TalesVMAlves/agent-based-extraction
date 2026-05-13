@@ -1,0 +1,11 @@
+[project]
+name = "argilla-deploy"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "argilla>=2.8.0",
+    "pandas>=3.0.3",
+    "pyyaml>=6.0.3",
+]

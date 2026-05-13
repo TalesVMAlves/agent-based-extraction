@@ -1,0 +1,35 @@
+argilla:
+  api_url: "http://localhost:6900" ## Mudar para o IP da rede
+  api_key: "argilla.apikey"
+  workspace: "default"
+
+## Utiliza um arquivo csv para gerar o conjunto a ser rotulado
+dataset_csv:
+  name: "collectaba_obs_diarias_abc"
+  file_path: "artefatos/obs_diarias_ner_abc.csv"
+  text_column: "text"
+  labels: 
+    - "ANTECEDENTE"
+    - "COMPORTAMENTO"
+    - "CONSEQUENCIA"
+  guidelines: "Classifique trechos que descrevam ações observáveis do paciente."
+
+## Utiliza uma query para gerar o conjunto a ser rotulado
+dataset_db:
+  name: "collectaba_obs_diarias_ner_comportamento"
+  query: >
+    SELECT id, created_at, observacao 
+    FROM observacoes_diarias 
+    ORDER BY RAND() 
+    LIMIT {total_limit}
+  column_mapping:
+    text: "observacao"
+    id_banco: "id"
+    data_nota: "created_at"
+  labels: 
+    - "ANTECEDENTE"
+    - "COMPORTAMENTO"
+    - "CONSEQUENCIA"
+  guidelines: "Classifique trechos que descrevam ações observáveis do paciente."
+  limit_train: 500
+  limit_test: 2000
