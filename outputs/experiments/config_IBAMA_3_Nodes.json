@@ -1,0 +1,47 @@
+{
+    "llm": {
+        "provider": "openai",
+        "models": {
+            "openai": {
+                "model_name": "gpt-5.4-nano",
+                "temperature": 0.0
+            }
+        }
+    },
+    "experiment": {
+        "name": "IBAMA_Entity_Extraction",
+        "mlflow_run": "IBAMA_3_Nodes",
+        "architecture": "3_nodes",
+        "dataset_path": "artefatos/ner_datasets/investigacao_acidentes_ibama_agent.csv",
+        "train_split_ratio": 0.8
+    },
+    "domain": {
+        "name": "IBAMA_Report_Descriptions",
+        "tasks": [
+            {
+                "name": "extrair_fenomeno",
+                "prompt_path": "artefatos/prompts/ibama/extract_phenomenon.txt",
+                "entities": [
+                    "fenomeno"
+                ]
+            },
+            {
+                "name": "extrair_causa",
+                "prompt_path": "artefatos/prompts/ibama/extract_cause.txt",
+                "entities": [
+                    "causa"
+                ]
+            },
+            {
+                "name": "extrair_consequencia",
+                "prompt_path": "artefatos/prompts/ibama/extract_consequence.txt",
+                "entities": [
+                    "consequencia"
+                ]
+            }
+        ],
+        "judge": {
+            "prompt_path": "artefatos/prompts/ibama/judge.txt"
+        }
+    }
+}

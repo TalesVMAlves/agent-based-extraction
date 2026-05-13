@@ -1,0 +1,5 @@
+.venv/
+.env
+tabela.md
+papers/
+__pycache__/

@@ -1,0 +1,6 @@
+doc_id,nota_final,analise_juiz,judge_phen_cobertura,judge_phen_pureza,judge_caus_cobertura,judge_caus_pureza,judge_cons_cobertura,judge_cons_pureza
+0,5,"Gabarito e predição estão vazios para todas as classes. Assim, não há discordância a avaliar e as métricas devem ser 1, pois a ausência de extração coincide com o padrão-ouro.",1,1,1,1,1,1
+1,5,"O gabarito e a predição estão vazios ([]) para as três classes (Causa, Fenômeno e Consequência). Como ambas as listas estão equivalentes ao padrão-ouro, não há omissão nem vazamento de fronteira a penalizar.",1,1,1,1,1,1
+2,5,"Gabarito e predição estão vazios para todas as classes. Como ambos são [], a extração respeita os critérios: sem omissão/erro semântico e sem vazamento entre classes.",1,1,1,1,1,1
+3,5,"Gabarito e predição estão vazios para as três classes (Causa, Fenômeno e Consequência). Portanto, não há como avaliar cobertura ou pureza além do critério explícito de concordância com listas vazias.",1,1,1,1,1,1
+4,5,"Relato descreve um incêndio com vazamento de combustível/óleo e potencial contaminação do solo, mas o gabarito para Causa, Fenômeno e Consequência está vazio. A predição também extraiu listas vazias para todas as classes, portanto não há erro de cobertura nem de pureza por inversão/mistura entre classes.",1,1,1,1,1,1

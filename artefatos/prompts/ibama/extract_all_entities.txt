@@ -1,0 +1,123 @@
+# Task Introduction
+Você é um especialista em Investigação de Acidentes e Engenharia de Segurança.
+Sua tarefa é ler um relato de ocorrência e extrair, de uma só vez, a cadeia causal completa do incidente: a CAUSA, o FENÔMENO principal e a CONSEQUÊNCIA.
+
+# Perguntas de Ancoragem e Definições
+Para evitar confusões temporais, siga estritamente esta ordem lógica de identificação:
+1.[FENÔMENO - O "Durante" / Ápice]: Qual foi o exato momento da perda de controle, falha física de alto impacto ou quebra de contenção? (Ex: tombamento, colisão, explosão, vazamento).
+2.[CAUSA - O "Antes" / Gatilho]: Qual foi o evento, erro humano, falha mecânica ou condição climática que ocorreu IMEDIATAMENTE ANTES e engatilhou o Fenômeno? (Ex: falha nos freios, dormiu ao volante, rompimento da tubulação).
+3. [CONSEQUÊNCIA - O "Depois" / Impacto]: Quais foram as perdas ou danos gerados DIRETAMENTE pelo Fenômeno no ambiente, pessoas ou instalações? (Ex: mortandade de peixes, derramamento no solo, área evacuada).
+
+# Diretrizes Críticas
+1. CÓPIA LITERAL: Extraia os elementos como substrings exatas (cópias literais) do texto original. Não resuma.
+2. PROIBIÇÃO DE SOBREPOSIÇÃO (MUITO IMPORTANTE): Cada fase é independente temporalmente. A Causa NÃO pode conter a ação do Fenômeno. A Consequência NÃO pode repetir a ação do Fenômeno. 
+3. RETORNO NULO (NULL): 
+   - Se não houver acidente industrial claro, o Fenômeno é null (e os demais também).
+   - Se o texto for puramente descritivo sem explicar o motivo prévio, a Causa é null. 
+   - Se o relato não citar nenhum impacto ou disser que não houve vazamento/dano, a Consequência é null. NUNCA invente ou presuma dados.
+4. ANCORAGEM CONTEXTUAL: Retorne um trecho curto do texto original (5 a 10 palavras antes e depois) e envolva a extração exata com suas respectivas tags (<CAUSA></CAUSA>, <FENOMENO></FENOMENO>, <CONSEQUENCIA></CONSEQUENCIA>).
+
+# Evaluation Steps (Mental Reasoning)
+1. Reconstrua mentalmente a linha do tempo do relato.
+2. Ancore primeiro o FENÔMENO (O Ponto Zero).
+3. Olhe para trás no tempo para extrair a CAUSA (se houver).
+4. Olhe para frente no tempo para extrair a CONSEQUÊNCIA (se houver).
+5. Escreva um "Raciocínio" comprovando a lógica temporal e a separação das 3 etapas.
+6. Forneça as extrações e os snippets.
+
+# Exemplos de Referência (Few-Shot)
+
+Relato: "O duto de transferência de óleo apresentou um rasgo na solda da geratriz inferior, causando vazamento de óleo, que com a ajuda da chuva se dispersou pelo terreno coberto por vegetação."
+Raciocínio: A linha do tempo é clara na ordem do texto: uma falha física (causa) engatilhou a perda de contenção (fenômeno), que resultou na contaminação do meio ambiente (consequência).
+Extração (Causa): "rasgo na solda da geratriz inferior"
+Snippet Causa: "óleo apresentou um <CAUSA>rasgo na solda da geratriz inferior</CAUSA>, causando vazamento de"
+Extração (Fenômeno): "vazamento de óleo"
+Snippet Fenômeno: "geratriz inferior, causando <FENOMENO>vazamento de óleo</FENOMENO>, que com a"
+Extração (Consequência): "se dispersou pelo terreno coberto por vegetação"
+Snippet Consequência: "da chuva <CONSEQUENCIA>se dispersou pelo terreno coberto por vegetação</CONSEQUENCIA>."
+
+Relato: "Uma explosão em uma concessionária de veículos próximo ao aeroporto de Brasília deixou uma pessoa ferida. O acidente ocorreu no laboratório de tintura da empresa. Na sala onde ocorreu a explosão são manuseados produtos inflamáveis. A suspeita é de que um curto-circuito tenha dado origem ao acidente."
+Raciocínio: A cronologia no texto está misturada. O evento principal de impacto (fenômeno) causou um dano humano imediato (consequência). A falha que originou tudo só é mencionada no fim como suspeita (causa).
+Extração (Causa): "curto-circuito"
+Snippet Causa: "A suspeita é de que um <CAUSA>curto-circuito</CAUSA> tenha dado origem"
+Extração (Fenômeno): "explosão em uma concessionária de veículos"
+Snippet Fenômeno: "Uma <FENOMENO>explosão em uma concessionária de veículos</FENOMENO> próximo ao aeroporto"
+Extração (Consequência): "deixou uma pessoa ferida"
+Snippet Consequência: "aeroporto de Brasília <CONSEQUENCIA>deixou uma pessoa ferida</CONSEQUENCIA>. O acidente ocorreu"
+
+Relato: "Um forte odor tomou conta da quadra no Lago Norte, que foi causado por um enorme vazamento de esgoto, que começou após o rompimento de canos de ligação da Estação Elevada."
+Raciocínio: Cronologia totalmente invertida. Impacto ambiental sentido (consequência) -> perda de contenção (fenômeno) -> falha estrutural prévia (causa).
+Extração (Causa): "rompimento de canos de ligação"
+Snippet Causa: "esgoto, que começou após o <CAUSA>rompimento de canos de ligação</CAUSA> da Estação Elevada."
+Extração (Fenômeno): "enorme vazamento de esgoto"
+Snippet Fenômeno: "foi causado por um <FENOMENO>enorme vazamento de esgoto</FENOMENO>, que começou após"
+Extração (Consequência): "forte odor tomou conta da quadra"
+Snippet Consequência: "Um <CONSEQUENCIA>forte odor tomou conta da quadra</CONSEQUENCIA> no Lago Norte,"
+
+Relato: "Abertura de válvula da anm com a surface flow tree devido a erro operacional. o óleo que estava na flowline surgiu na superfície com derramamento no convés da plataforma, ocorrendo derrame de uma parte do petróleo e óleo diesel no mar."
+Raciocínio: A liberação do produto (fenômeno) ocorreu por uma falha do operador (causa). A partir daí, gerou-se uma contaminação sequencial no convés e no mar (consequências integradas).
+Extração (Causa): "erro operacional"
+Snippet Causa: "surface flow tree devido a <CAUSA>erro operacional</CAUSA>. o óleo que"
+Extração (Fenômeno): "Abertura de válvula"
+Snippet Fenômeno: "<FENOMENO>Abertura de válvula</FENOMENO> da anm com a"
+Extração (Consequência): "derramamento no convés da plataforma, ocorrendo derrame de uma parte do petróleo e óleo diesel no mar"
+Snippet Consequência: "surgiu na superfície com <CONSEQUENCIA>derramamento no convés da plataforma, ocorrendo derrame de uma parte do petróleo e óleo diesel no mar</CONSEQUENCIA>."
+
+Relato: "Ação de vândalo provocou vazamento de 1.700 mil litros de óleo diesel de caminhão. O material ficou em uma valeta próximo a base da Ipiranga. Houve percolação do produto no solo."
+Raciocínio: A intervenção externa intencional (causa) provocou a quebra de contenção (fenômeno), resultando na contaminação física do solo (consequência).
+Extração (Causa): "Ação de vândalo"
+Snippet Causa: "<CAUSA>Ação de vândalo</CAUSA> provocou vazamento de 1.700"
+Extração (Fenômeno): "vazamento de 1.700 mil litros de óleo diesel"
+Snippet Fenômeno: "Ação de vândalo provocou <FENOMENO>vazamento de 1.700 mil litros de óleo diesel</FENOMENO> de caminhão. O material"
+Extração (Consequência): "Houve percolação do produto no solo"
+Snippet Consequência: "base da Ipiranga. <CONSEQUENCIA>Houve percolação do produto no solo</CONSEQUENCIA>."
+
+Relato: "A acidente envolvendo o bi-trem carregado com 48 mil litros de combustível (gasolina e diesel) tombou sobre a pista ocasionando interdição da pista nos dois sentido. Houve rompimento dos tanques, provocado vazamento de 500 litros de óleo diesel."
+Raciocínio: O texto descreve o evento acidental principal (tombou), mas omite o gatilho prévio (causa nula). Detalha, porém, impactos em cascata: trânsito parado e perda de produto (consequência).
+Extração (Causa): null
+Snippet Causa: null
+Extração (Fenômeno): "tombou"
+Snippet Fenômeno: "combustível (gasolina e diesel) <FENOMENO>tombou</FENOMENO> sobre a pista ocasionando"
+Extração (Consequência): "ocasionando interdição da pista nos dois sentido. Houve rompimento dos tanques, provocado vazamento de 500 litros de óleo diesel"
+Snippet Consequência: "pista <CONSEQUENCIA>ocasionando interdição da pista nos dois sentido. Houve rompimento dos tanques, provocado vazamento de 500 litros de óleo diesel</CONSEQUENCIA>."
+
+Relato: "Um veículo, que transportava 13.800 quilos de produtos de limpeza, tombou no córrego Bonsucesso, ao lado da rodovia Marechal Rondon, parte da embalagens dos produtos de limpeza de rompeu, Houve mortandade de pexes pequenos como bagres e lambaris."
+Raciocínio: O relato descreve a perda de controle (fenômeno) e o seu dano final à fauna (consequência). O motivo pelo qual o caminhão tombou não é citado.
+Extração (Causa): null
+Snippet Causa: null
+Extração (Fenômeno): "tombou no córrego Bonsucesso"
+Snippet Fenômeno: "produtos de limpeza, <FENOMENO>tombou no córrego Bonsucesso</FENOMENO>, ao lado da rodovia"
+Extração (Consequência): "parte da embalagens dos produtos de limpeza de rompeu, Houve mortandade de pexes pequenos como bagres e lambaris"
+Snippet Consequência: "Marechal Rondon, <CONSEQUENCIA>parte da embalagens dos produtos de limpeza de rompeu, Houve mortandade de pexes pequenos como bagres e lambaris</CONSEQUENCIA>."
+
+Relato: "Uma ponte de madeira que passa sobre o Ribeirão Batalha rompeu-se na hora em que ali passava um caminhão carregado com 30 mil litros de óleo diesel, mas não houve vazamento do produto."
+Raciocínio: O colapso estrutural (fenômeno) ocorreu atrelado ao excesso de peso/passagem do veículo (causa). O texto afirma expressamente que não houve vazamento ou danos secundários, logo a consequência é nula.
+Extração (Causa): "passava um caminhão carregado com 30 mil litros"
+Snippet Causa: "na hora em que ali <CAUSA>passava um caminhão carregado com 30 mil litros</CAUSA> de óleo diesel,"
+Extração (Fenômeno): "rompeu-se"
+Snippet Fenômeno: "passa sobre o Ribeirão Batalha <FENOMENO>rompeu-se</FENOMENO> na hora em que"
+Extração (Consequência): null
+Snippet Consequência: null
+
+Relato: "O motorista de um caminhão que transportava herbicida dormiu na direção, provocando o tombamento do veículo na entrada de uma ponte. O caminhão transportava glifosato, um tipo de agrotóxico fabricado pela monsanto."
+Raciocínio: Uma limitação humana (causa) engatilhou a capotagem (fenômeno). Não há nenhuma descrição de vazamento, danos à ponte ou vítimas; a consequência não é informada.
+Extração (Causa): "dormiu na direção"
+Snippet Causa: "transportava herbicida <CAUSA>dormiu na direção</CAUSA>, provocando o tombamento"
+Extração (Fenômeno): "tombamento do veículo"
+Snippet Fenômeno: "dormiu na direção, provocando o <FENOMENO>tombamento do veículo</FENOMENO> na entrada de uma"
+Extração (Consequência): null
+Snippet Consequência: null
+
+Relato: "Um caminhão carregado com 20 mil litros de gasolina e 5 mil litros de álcool tombou. A carreta estava em uma descida quando precisou frear para não bater em um carro que estava em baixa velocidade. O freio do caminhão estourou e o mesmo voltou de ré na pista."
+Raciocínio: O evento de ápice é informado logo no início (tombou). Em seguida, o texto volta no tempo para descrever os gatilhos mecânicos sucessivos (frear na descida / freio estourou) que formam a causa. Não são relatados derramamentos ou feridos.
+Extração (Causa): "freio do caminhão estourou"
+Snippet Causa: "em baixa velocidade. O <CAUSA>freio do caminhão estourou</CAUSA> e o mesmo voltou"
+Extração (Fenômeno): "tombou"
+Snippet Fenômeno: "5 mil litros de álcool <FENOMENO>tombou</FENOMENO>. A carreta estava em"
+Extração (Consequência): null
+Snippet Consequência: null
+
+---
+DADOS PARA EXTRAÇÃO
+Relato da ocorrência:
+{text}

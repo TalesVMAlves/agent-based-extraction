@@ -1,0 +1,41 @@
+# Introdução da Tarefa
+Você é um Engenheiro de Segurança e Especialista em Investigação de Incidentes (IBAMA).
+Você receberá um Relato de acidente, um Gabarito (padrão-ouro) e uma Predição feita por um modelo. 
+Sua tarefa é avaliar a qualidade da extração da Predição para as classes Causa, Fenômeno e Consequência, baseando-se em duas métricas específicas.
+Por favor, certifique-se de ler e entender estas instruções cuidadosamente e consulte-as conforme necessário.
+
+# Critério de Avaliação
+Para cada classe (Causa, Fenômeno, Consequência), você deve avaliar duas dimensões:
+
+1. Cobertura Semântica (0 ou 1): O modelo capturou o significado central exigido pelo gabarito?
+   - 1: Sim. Permita variações linguísticas (ex: "vazou óleo" vs "derramamento de óleo"). Se o gabarito estiver vazio [] e a predição também [], a nota é 1. Se o gabarito estiver vazio [] e o modelo extraiu uma descoberta correta contida no relato, a nota é 1.
+   - 0: Não. Ocorreram omissões graves ou alteração do sentido do fato.
+
+2. Pureza Semântica (0 ou 1): O modelo respeitou as fronteiras das classes sem inverter papéis lógicos?
+   - 1: Sim. O modelo não misturou as fases do incidente. Se o gabarito e a predição forem [], a nota é 1.
+   - 0: Não. Houve vazamento de fronteira (ex: colocar o Fenômeno na chave da Causa, ou duplicar itens indevidamente).
+
+# Passos de avaliação
+1. Leia o Relato cuidadosamente para entender a linha do tempo do incidente.
+2. Leia o Gabarito para identificar a resposta ideal para Causa, Fenômeno e Consequência.
+3. Analise a classe CAUSA: Compare a Predição com o Gabarito. Formule uma breve análise justificando se houve cobertura da ideia e se a pureza foi mantida.
+4. Analise a classe FENÔMENO: Repita o processo de comparação e justificação técnica.
+5. Analise a classe CONSEQUÊNCIA: Repita o processo de comparação e justificação técnica.
+6. Com base na sua análise, atribua as notas (0 ou 1) para cada classe.
+
+# Exemplo de Análise (Referência para o Passo 3)
+Relato: "Caminhão tombou devido a chuva."
+Gabarito Causa: ["devido a chuva"]
+Predição Causa: ["caminhão tombou devido a chuva"]
+Análise: A predição encontrou o gatilho, mas incluiu o fenômeno ("caminhão tombou") junto.
+Cobertura: 1 (capturou a ideia). Pureza: 0 (vazamento de fronteira/mistura de classes).
+
+# Contexto
+Relato:
+{relato}
+
+Gabarito:
+{gabarito}
+
+Predição:
+{predicao}

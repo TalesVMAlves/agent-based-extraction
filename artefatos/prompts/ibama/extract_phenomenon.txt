@@ -1,0 +1,71 @@
+# Task Introduction
+Você é um especialista em Investigação de Acidentes e Engenharia de Segurança.
+Sua tarefa é ler um relato de ocorrência e extrair EXCLUSIVAMENTE o FENÔMENO (o evento acidental principal).
+
+# Evaluation Criteria & Definitions
+- FENÔMENO (O "Durante"): É o exato momento da perda de controle, falha física de alto impacto ou quebra de contenção de energia/material. Exemplos: "tombamento de carreta", "colisão frontal", "incêndio", "vazamento de óleo", "explosão".
+- EXCLUSÃO DE CAUSA (O "Antes"): O Fenômeno NÃO é o que provocou o acidente. Falhas mecânicas preliminares, erros humanos ou fatores climáticos (ex: "motorista perdeu o freio", "rompimento de válvula", "fortes chuvas") são CAUSAS.
+- EXCLUSÃO DE CONSEQUÊNCIA (O "Depois"): O Fenômeno NÃO é o impacto ambiental ou humano posterior (ex: "atingiu o rio", "contaminou o solo", "deixou uma pessoa ferida").
+
+# Evaluation Steps (Mental Reasoning)
+1. Leia o relato e reconstrua a linha do tempo: [O que levou ao acidente? (Causa)] ->[O ÁPICE DO ACIDENTE (Fenômeno)] ->[Quais foram os danos? (Consequência)].
+2. Isole apenas a ação que representa o Ápice (Fenômeno). Se o relato descrever apenas a descoberta de um impacto (ex: acharam uma mancha), e não o acidente em si, o fenômeno é inexistente.
+3. Copie literalmente a substring exata do texto que descreve esse evento. Inclua o veículo/agente associado se estiver na mesma frase curta.
+4. Crie um snippet de contexto (5 a 10 palavras antes e depois) com a tag <FENOMENO></FENOMENO>.
+
+# Exemplos de Referência (Few-Shot)
+
+Relato: "Incêndio em um depósito de materiais recicláveis. Segundo os moradores, o fogo começou nos fundos do local, de cima para baixo. O dono dos produtos recicláveis em estoque, afirmou que havia cerca de 60 toneladas de garrafas pet e plásticos em uma área de quase três mil m²."
+Raciocínio: Não há causa explícita. O ápice do evento é o fogo se iniciando no depósito. A quantidade de material é o cenário.
+Extração: "Incêndio"
+Snippet: "<FENOMENO>Incêndio</FENOMENO> em um depósito de materiais recicláveis. Segundo os moradores,"
+
+Relato: "Caminhão tanque que transportava ácido clorídrico apresentou problemas no recipiente de carga e começou a vazar o líquido dentro de um posto de combustível. O caminhão foi colocado no acostamento da pista para evitar uma possível explosão. A carga tóxica começou a corroer o invólucro da carreta e formou uma nuvem de fumaça branca."
+Raciocínio: Causa: "apresentou problemas no recipiente". Consequência: "corroer o invólucro / nuvem de fumaça". Ápice (Fenômeno): A quebra de contenção do líquido.
+Extração: "começou a vazar o líquido"
+Snippet: "problemas no recipiente de carga e <FENOMENO>começou a vazar o líquido</FENOMENO> dentro de um posto de combustível."
+
+Relato: "Um forte odor tomou conta da quadra no Lago Norte, que foi causado por um enorme vazamento de esgoto, que começou após o rompimento de canos de ligação da Estação Elevada da Companhia de Saneamento Ambiental do Distrito Federal (Caesb). A cachoeira de esgoto contornou a estação e desceu até as águas do Lago Paranoá"
+Raciocínio: A cronologia no texto está invertida. Odor (Consequência) -> Vazamento (Fenômeno) -> Rompimento de canos (Causa). 
+Extração: "enorme vazamento de esgoto"
+Snippet: "Lago Norte, que foi causado por um <FENOMENO>enorme vazamento de esgoto</FENOMENO>, que começou após o rompimento de canos"
+
+Relato: "O córrego que margeia o pátio da empresa Belosanta Transporte e Serviços Ltda., aumentou o volume atingindo o pátio, a área de lavagem de veículos, a troca de óleo e oficina da empresa, derrubando muros de divisa da propriedade, arrastando tambores de armazenamento de óleo lubrificante usado e filtros de óleo substituído contaminando as águas do córrego e suas margens."
+Raciocínio: O evento inteiro é gerado por uma força da natureza ("aumentou o volume" - Causa), resultando em danos ("derrubando muros / contaminando águas" - Consequência). Não há descrição de um acidente operacional/industrial direto que caracterize o fenômeno na ótica de segurança industrial investigada.
+Extração: "Nenhum"
+Snippet: "Nenhum"
+
+Relato: "Uma explosão em uma concessionária de veículos próximo ao aeroporto de Brasília deixou uma pessoa ferida. O acidente ocorreu no laboratório de tintura da empresa. Na sala onde ocorreu a explosão são manuseados produtos inflamáveis. A suspeita é de que um curto-circuito tenha dado origem ao acidente."
+Raciocínio: O evento de ápice abre o texto (Explosão). A pessoa ferida é consequência. O curto-circuito no final é a causa suspeita.
+Extração: "explosão em uma concessionária de veículos"
+Snippet: "Uma <FENOMENO>explosão em uma concessionária de veículos</FENOMENO> próximo ao aeroporto de Brasília deixou"
+
+Relato: "Uma mancha negra de 5 quilômetros mostrava o tamanho da tragédia ambiental, onde um caminhão-tanque foi atingido por um gol fazendo com que 31 mil litros de sua carga, de massa asfáltica, vazasse na represa de Rio Preto. O produto escorreu ao lado da rodovia, chegou ao córrego dos Macacos e atingiu o lago 3 da represa Municipal."
+Raciocínio: Causa: "atingido por um gol". Fenômeno: a perda de contenção da carga. Consequência: mancha negra e produto escorrendo para os córregos.
+Extração: "31 mil litros de sua carga, de massa asfáltica, vazasse"
+Snippet: "foi atingido por um gol fazendo com que <FENOMENO>31 mil litros de sua carga, de massa asfáltica, vazasse</FENOMENO> na represa de Rio Preto."
+
+Relato: "A fiscalização da Fepan descobriu manchas de óleo no Litoral Norte. A teoria dos fiscais é que alguma embarcação tenha lavado seu porão muito próximo á beira da praia. Explica ainda que o óleo tem uma espécie de DNA que, ao ser analisado, pode ter a origem identificada."
+Raciocínio: O texto relata a descoberta de uma consequência (manchas de óleo). A ação que gerou isso (lavagem do porão) é descrita apenas como uma teoria/hipótese, não confirmando o fenômeno acidental exato no relato base.
+Extração: "Nenhum"
+Snippet: "Nenhum"
+
+Relato: "Um caminhão carregado com 20 mil litros de gasolina e 5 mil litros de álcool tombou. A carreta estava em uma descida quando precisou frear para não bater em um carro que estava em baixa velocidade. O freio do caminhão estourou e o mesmo voltou de ré na pista. Cetesb foi chamada pois exite um rio próximo ao acidente."
+Raciocínio: O texto informa o fenômeno de imediato ("tombou"). Depois, volta no tempo para explicar a causa ("precisou frear / freio estourou").
+Extração: "tombou"
+Snippet: "5 mil litros de álcool <FENOMENO>tombou</FENOMENO>. A carreta estava em uma descida"
+
+Relato: "Um rompimento na tubulação de um tanque provocou o vazamento de óleo combustível, que escorreu por uma canaleta de drenagem de água da chuva e atingiu um lago natural e uma área de várzea. A estimativa da Cetesb é que 22 m3 equivalente a 22 mil litros de óleo tenha escorrido pela canaleta."
+Raciocínio: Falha primária/Causa: "rompimento na tubulação". Evento Acidental Principal/Fenômeno: "vazamento de óleo combustível". Danos/Consequência: "escorreu por uma canaleta / atingiu um lago".
+Extração: "vazamento de óleo combustível"
+Snippet: "provocou o <FENOMENO>vazamento de óleo combustível</FENOMENO>, que escorreu por uma canaleta de drenagem"
+
+Relato: "O motorista de um caminhão que transportava moinha de carvão perdeu o controle e quase bateu num barranco. Percebeu o início do incêndio do mesmo lado em que ouviu o estalo. A parte de trás da carreta tombou e também foi, aos poucos, consumida pelas chamas, que se alastraram por todo o veiculo."
+Raciocínio: Causa: "perdeu o controle". O ápice da perda de estabilidade mecânica do veículo é o tombamento. As chamas alastrando-se pelo veículo operam aqui como consequência imediata estrutural do acidente.
+Extração: "tombou"
+Snippet: "A parte de trás da carreta <FENOMENO>tombou</FENOMENO> e também foi, aos poucos, consumida"
+
+---
+DADOS PARA EXTRAÇÃO
+Relato da ocorrência:
+{text}

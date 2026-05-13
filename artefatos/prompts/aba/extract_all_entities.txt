@@ -1,0 +1,47 @@
+Você é um especialista em Análise do Comportamento Aplicada (ABA).
+Sua tarefa é ler um relato clínico completo, identificar os COMPORTAMENTOS divergentes/interferentes e extrair a Tríplice Contingência exata (Antecedente, Comportamento, Consequência) para cada um deles.
+
+PERGUNTAS DE ANCORAGEM E DEFINIÇÕES:
+1. [COMPORTAMENTO] Qual foi a ação observável divergente ou interferente emitida pelo paciente? (Pode ser ativa, como chorar, ou passiva, como recusar).
+2. [ANTECEDENTE] O que o terapeuta fez ou qual mudança ambiental ocorreu imediatamente ANTES do comportamento? (Geralmente uma demanda, transição ou mudança).
+3. [CONSEQUENCIA] Qual foi o manejo do terapeuta ou manipulação ambiental imediata APÓS o comportamento? (Ex: redirecionamento, ajuda, pausa. Ações autônomas do paciente como "se acalmou" não são consequências ambientais).
+
+DIRETRIZES CRÍTICAS:
+1. CÓPIA LITERAL: Extraia os elementos como CÓPIAS LITERAIS do texto. Não resuma.
+2. SEPARAÇÃO TEMPORAL ABSOLUTA (MUITO IMPORTANTE): O Antecedente é estritamente o gatilho. O Antecedente É PROIBIDO de conter as palavras da ação/comportamento.
+    - ERRADO (Antecedente contém a ação): "apresentou recusa ao entrar na sala"
+    - CORRETO (Apenas o gatilho): "ao entrar na sala"
+3. AJUDA É CONSEQUÊNCIA: Se o relato diz "necessitou de ajuda", a falha na resposta antecedeu a ajuda. O antecedente é a tarefa em si, a "ajuda" é a consequência.
+4. RETORNO NULO: Se não houver descrição clara no texto para o antecedente ou para a consequência do comportamento identificado, retorne null no campo respectivo. NUNCA invente dados ou presuma o que aconteceu.
+5. ANCORAGEM CONTEXTUAL: Para os snippets, retorne um trecho curto do texto original (5 a 10 palavras antes e depois) e envolva a extração exata com suas respectivas tags (<ANTECEDENTE></ANTECEDENTE>, <COMPORTAMENTO></COMPORTAMENTO>, <CONSEQUENCIA></CONSEQUENCIA>).
+6. JUSTIFICATIVA: Forneça uma análise técnica (em termos ABA) justificando a tríplice completa.
+
+---
+EXEMPLOS DE EXTRAÇÃO ESPERADA:
+
+**Exemplo 1**
+Relato: "Laura jogou o jogo da memória dos transportes com a terapeuta, chorou e cruzou os braços quando começou a contar o monte achado pela terapeuta e o dela, percebeu que estava perdendo, e apresentou esses comportamentos. Terapeuta ofertou papel e ela assoou o nariz, jogando o papel no lixo, continuou a brincar."
+
+Extração (Antecedente): "percebeu que estava perdendo"
+Snippet Antecedente: "contar o monte, <ANTECEDENTE>percebeu que estava perdendo</ANTECEDENTE>, e apresentou esses"
+Extração (Comportamento): "chorou e cruzou os braços"
+Snippet Comportamento: "terapeuta, <COMPORTAMENTO>chorou e cruzou os braços</COMPORTAMENTO> quando começou a contar"
+Extração (Consequencia): "Terapeuta ofertou papel"
+Snippet Consequencia: "apresentou esses comportamentos. <CONSEQUENCIA>Terapeuta ofertou papel</CONSEQUENCIA> e ela assoou o nariz"
+Justificativa: "O episódio de choro ocorreu imediatamente após a frustração da perda no jogo. O manejo foi o acolhimento oferecendo papel."
+
+**Exemplo 2**
+Relato: "Ao retornar para a sala, Daniel teve resistência para entrar, se jogou no chão e ao ser fechada a porta o Daniel começou a chorar, mas logo se acalmou e ajudou a professora aguardar os brinquedos."
+
+Extração (Antecedente): "Ao retornar para a sala"
+Snippet Antecedente: "houve necessidade). <ANTECEDENTE>Ao retornar para a sala</ANTECEDENTE>, Daniel teve resistência para"
+Extração (Comportamento): "se jogou no chão"
+Snippet Comportamento: "teve resistência para entrar, <COMPORTAMENTO>se jogou no chão</COMPORTAMENTO> e ao ser fechada"
+Extração (Consequencia): null
+Snippet Consequencia: null
+Justificativa: "O comportamento de se jogar no chão ocorreu na transição de volta para a sala. O relato diz que ele se acalmou logo depois, o que é orgânico. Não há descrição clínica de um manejo imediato mediado pelo terapeuta para esta ação."
+
+---
+DADOS PARA EXTRAÇÃO
+Relato da sessão: 
+{text}

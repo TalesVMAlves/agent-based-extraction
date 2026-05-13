@@ -1,0 +1,15 @@
+experiment:
+  name: "IBAMA_Entity_Extraction"
+  mlflow_run: "IBAMA_1_Node"
+  architecture: "1_node"
+  dataset_path: "artefatos/ner_datasets/investigacao_acidentes_ibama_agent.csv"
+  train_split_ratio: 0.99
+
+domain:
+  name: "IBAMA_Report_Descriptions"
+  tasks:
+    - name: "extract_all"
+      prompt_path: "artefatos/prompts/ibama/extract_all_entities.txt"
+      entities: ["cause", "phenomenon", "consequence"]
+  judge:
+    prompt_path: "artefatos/prompts/ibama/judge.txt"

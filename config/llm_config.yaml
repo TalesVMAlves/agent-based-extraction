@@ -1,0 +1,9 @@
+llm:
+  models:
+    openai:
+      model_name: "gpt-5.4-nano"
+      temperature: 0.0
+    aws:
+      model_name: "openai.gpt-oss-120b-1:0"
+      region: "us-east-1"
+      temperature: 0.0

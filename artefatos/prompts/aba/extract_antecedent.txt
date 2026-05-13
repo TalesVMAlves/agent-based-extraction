@@ -1,0 +1,30 @@
+Você é um especialista em Análise do Comportamento Aplicada (ABA).
+Sua tarefa é ler um relato clínico e extrair EXCLUSIVAMENTE o ANTECEDENTE (gatilho ambiental) que ocorreu imediatamente ANTES de um comportamento foco.
+
+PERGUNTA DE ANCORAGEM: "O que o terapeuta fez ou qual mudança ambiental ocorreu imediatamente ANTES do paciente apresentar o comportamento?"
+
+DEFINIÇÃO CLÍNICA DE ANTECEDENTE (Padrão Ouro):
+- O antecedente geralmente é a DEMANDA solicitada (ex: "No protocolo imitação"), uma TRANSIÇÃO (ex: "ao entrar na sala") ou uma MUDANÇA AMBIENTAL (ex: "após a saída do pai").
+
+DIRETRIZES CRÍTICAS:
+1. CÓPIA LITERAL: Extraia o Antecedente como cópia literal do texto original. Não resuma nem reescreva.
+2. OBJETIVIDADE E TAMANHO: O antecedente deve ser o gatilho MAIS CURTO E IMEDIATO possível. Extraia no MÁXIMO de 10 a 15 palavras. NUNCA extraia frases ou parágrafos inteiros.
+3. SEPARAÇÃO TEMPORAL ABSOLUTA: O Antecedente é estritamente o gatilho prévio. NUNCA inclua o verbo de recusa, dificuldade ou a ação do paciente no antecedente.
+    - ERRADO (vazamento de ação): "apresentou resistência à aceitar ajuda" ou "o aprendiz não respondeu à demanda de matemática"
+    - CORRETO (apenas o gatilho): "aceitar ajuda" ou "demanda de matemática"
+4. CUIDADOS COM A PALAVRA 'AJUDA': Se o relato diz "necessitou de ajuda", o comportamento/falha na resposta antecedeu a ajuda. O antecedente é a tarefa em si, NÃO a ajuda.
+5. RETORNO NULO: Se o texto não descreve claramente o que gerou o comportamento ou apenas começa a frase narrando o comportamento, retorne null. NUNCA invente.
+6. ANCORAGEM CONTEXTUAL: Retorne um trecho curto do texto original (5 a 10 palavras antes e depois) envolvendo a extração com <ANTECEDENTE> e </ANTECEDENTE>.
+
+---
+EXEMPLO DE EXTRAÇÃO ESPERADA:
+Relato: "Na atividade de colar lantejoulas, o paciente se recusou a tocar na cola e começou a chorar. Fiz a troca da atividade por uma pintura a dedo."
+Comportamento Foco: "se recusou a tocar na cola e começou a chorar"
+
+Extração (Antecedente): "Na atividade de colar lantejoulas"
+Snippet: "<ANTECEDENTE>Na atividade de colar lantejoulas</ANTECEDENTE>, o paciente se recusou"
+---
+
+DADOS PARA EXTRAÇÃO
+Relato: "{text}"
+Contexto previamente extraído (Comportamento Foco): {contexto}

@@ -1,0 +1,23 @@
+experiment:
+  name: "ABA_MultiAgent_Extraction"
+  mlflow_run: "ABA_3_Nodes"
+  architecture: "3_nodes"
+  dataset_path: "artefatos/ner_datasets/obs_diarias_ner_abc_restaurado.csv"
+  train_split_ratio: 0.8
+
+domain:
+  name: "ABA_Daily_Observations"
+  tasks:
+    - name: "extrair_comportamento"
+      prompt_path: "artefatos/prompts/aba/extract_comportamento.txt"
+      entities: ["comportamento"]
+      
+    - name: "extrair_antecedente"
+      prompt_path: "artefatos/prompts/aba/extract_antecedente.txt"
+      entities: ["antecedente"]
+      
+    - name: "extrair_consequencia"
+      prompt_path: "artefatos/prompts/aba/extract_consequencia.txt"
+      entities: ["consequencia"]
+  judge:
+    prompt_path: "artefatos/prompts/aba/judge.txt"

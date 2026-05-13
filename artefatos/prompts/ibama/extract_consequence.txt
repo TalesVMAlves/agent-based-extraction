@@ -1,0 +1,85 @@
+# Task Introduction
+Você é um especialista em Investigação de Acidentes e Engenharia de Segurança. 
+Sua tarefa é extrair EXCLUSIVAMENTE a CONSEQUÊNCIA gerada por um acidente, dado o relato e o contexto prévio (Causa e Fenômeno).
+
+# Evaluation Criteria & Definitions
+- CONSEQUÊNCIA (O "Depois"): O impacto tangível (material, ambiental, humano ou operacional) gerado DIRETAMENTE pelo Fenômeno. 
+- EXEMPLOS COMUNS: Vazamentos ou derramamentos pós-tombamento, mortandade de animais, contaminação de corpos hídricos ou solo, destruição de patrimônio (queimado/destruído), vias interditadas, área evacuada, feridos e mortos.
+- PROIBIÇÃO DE REPETIÇÃO: NUNCA extraia o mesmo evento que já foi definido como Fenômeno. Se o fenômeno for "vazamento de óleo", a consequência será "atingiu o rio". Se o fenômeno for "tombamento", a consequência pode ser o "vazamento da carga". São etapas encadeadas.
+- AUSÊNCIA (NULL): Se o relato afirma que "não houve vazamento", "não atingiu o curso d'água", ou apenas descreve a limpeza preventiva sem citar um dano real, a consequência está ausente. Retorne null.
+
+# Evaluation Steps (Mental Reasoning)
+1. Revise a cadeia causal já identificada (Contexto: Causa e Fenômeno).
+2. Leia o relato buscando o RESULTADO FINAL: Quais foram as perdas, danos ou impactos imediatos gerados por esse fenômeno no ambiente, nas pessoas ou nas instalações?
+3. Crie um "Raciocínio" para explicar a separação lógica e temporal (O que é o fenômeno vs. O que ele destruiu/causou).
+4. Isole e copie a substring literal correspondente a esse impacto. Se não houver, retorne null.
+5. Crie um snippet de contexto (5 a 10 palavras antes e depois) envolvendo a extração com a tag <CONSEQUENCIA></CONSEQUENCIA>.
+
+# Exemplos de Referência (Few-Shot)
+
+Relato: "A explosão de um tanque de biodiesel provocou a morte de uma pessoa. Segundo o Corpo de Bombeiros, era feito a manutenção do tanque de 14 mil litros quando ele explodiu."
+Contexto do Evento: Causa [manutenção do tanque] -> Fenômeno [explosão]
+Raciocínio: O fenômeno "explosão" gerou um impacto humano imediato que foi a fatalidade. A separação é clara: a explosão é o evento físico, a morte é o resultado.
+Extração: "morte de uma pessoa"
+Snippet: "provocou a <CONSEQUENCIA>morte de uma pessoa</CONSEQUENCIA>. Segundo o Corpo de"
+
+Relato: "Um veículo, que transportava 13.800 quilos de produtos de limpeza, tombou no córrego Bonsucesso, ao lado da rodovia Marechal Rondon, parte da embalagens dos produtos de limpeza de rompeu, Houve mortandade de pexes pequenos como bagres e lambaris."
+Contexto do Evento: Causa [null] -> Fenômeno [tombou no córrego]
+Raciocínio: O acidente mecânico (tombamento) gerou a quebra da embalagem e teve como impacto ambiental a morte da fauna local aquática.
+Extração: "mortandade de pexes pequenos como bagres e lambaris"
+Snippet: "rompeu, Houve <CONSEQUENCIA>mortandade de pexes pequenos como bagres e lambaris</CONSEQUENCIA>. Também muitos produtos intactos"
+
+Relato: "Uma carreta que transportava etanol hidratado comum, tombou na pista provocando o vazamento de aproximadamente 16.000 litros de etanol. O produto escoou para o solo ao lado da pista,"
+Contexto do Evento: Causa [null] -> Fenômeno[tombou]
+Raciocínio: O tombamento do veículo (evento físico) resultou na quebra de contenção e liberação de produto, que atingiu o meio ambiente. Logo, o vazamento e o escoamento são as consequências do tombamento.
+Extração: "vazamento de aproximadamente 16.000 litros de etanol. O produto escoou para o solo"
+Snippet: "provocando o <CONSEQUENCIA>vazamento de aproximadamente 16.000 litros de etanol. O produto escoou para o solo</CONSEQUENCIA> ao lado da pista,"
+
+Relato: "Vazamento de gás cloro em indústria de produtos de limpeza afetou funcionários e policiais que foram ao local atender a denúncia."
+Contexto do Evento: Causa [null] -> Fenômeno [Vazamento de gás cloro]
+Raciocínio: Aqui o vazamento é o fenômeno inicial. O impacto gerado por esse gás liberado na atmosfera foi a intoxicação/afetação das pessoas ao redor.
+Extração: "afetou funcionários e policiais"
+Snippet: "produtos de limpeza <CONSEQUENCIA>afetou funcionários e policiais</CONSEQUENCIA> que foram ao local"
+
+Relato: "Uma ponte de madeira que passa sobre o Ribeirão Batalha rompeu-se na hora em que ali passava um caminhão carregado com 30 mil litros de óleo diesel, mas não houve vazamento do produto."
+Contexto do Evento: Causa [peso do caminhão] -> Fenômeno[ponte rompeu-se]
+Raciocínio: O relato foca na falha estrutural da ponte. Porém, declara explicitamente que o dano secundário temido (o vazamento da carga para o meio ambiente) não ocorreu. Não há menção a feridos ou outros impactos diretos.
+Extração: null
+Snippet: null
+
+Relato: "O duto de transferência de óleo apresentou um rasgo na solda da geratriz inferior, causando vazamento de óleo, que com a ajuda da chuva se dispersou pelo terreno coberto por vegetação."
+Contexto do Evento: Causa [rasgo na solda] -> Fenômeno [vazamento de óleo]
+Raciocínio: A perda de contenção (vazamento) é o fenômeno. O que aconteceu depois que a contenção falhou? O óleo contaminou o ambiente ao redor, atingindo a vegetação.
+Extração: "se dispersou pelo terreno coberto por vegetação"
+Snippet: "chuva <CONSEQUENCIA>se dispersou pelo terreno coberto por vegetação</CONSEQUENCIA>."
+
+Relato: "Um acidente envolvendo uma carreta e um caminhão provocou a colisão de ambos, onde um dos veículos estava carregado com cerca de oito toneladas de garrafas de álcool e acetona, eu outro transportava peças automotivas. Os dois pegaram fogo e ficaram destruídos."
+Contexto do Evento: Causa [acidente/perda de controle] -> Fenômeno [colisão]
+Raciocínio: O fenômeno de impacto físico (colisão) gerou ignição da carga inflamável, resultando em um impacto material (perda total dos veículos).
+Extração: "pegaram fogo e ficaram destruídos"
+Snippet: "Os dois <CONSEQUENCIA>pegaram fogo e ficaram destruídos</CONSEQUENCIA>."
+
+Relato: "Vazamento de gás fez com que uma área do pólo de Camaçari fosse evacuada. Foram detectadas as substâncias ciclohexil isocianato e fosgênio, considerando o mais grave por se tratar de um gás com alto potencial tóxico e letal."
+Contexto do Evento: Causa[null] -> Fenômeno [Vazamento de gás]
+Raciocínio: A liberação do gás (fenômeno) forçou a tomada de medidas emergenciais restritivas que afetam a operação e o cotidiano da área industrial, o que configura a consequência.
+Extração: "uma área do pólo de Camaçari fosse evacuada"
+Snippet: "fez com que <CONSEQUENCIA>uma área do pólo de Camaçari fosse evacuada</CONSEQUENCIA>. Foram detectadas as"
+
+Relato: "A Delegacia de Proteção Ambiental (DPMA) interditou a Nero 20 Ind. e Com. de Produtos Químicos, por crime de poluição hídrica. A empresa é acusada de jogar resíduos diretamente no canal Calombé, um dos afluentes do Rio Iguaçu."
+Contexto do Evento: Causa [null] -> Fenômeno [jogar resíduos diretamente no canal Calombé]
+Raciocínio: O lançamento intencional/acidental no corpo hídrico (fenômeno) gerou um impacto legal e operacional de punição imediata relatado no texto.
+Extração: "interditou a Nero 20 Ind. e Com. de Produtos Químicos"
+Snippet: "Ambiental (DPMA) <CONSEQUENCIA>interditou a Nero 20 Ind. e Com. de Produtos Químicos</CONSEQUENCIA>, por crime de poluição"
+
+Relato: "A acidente envolvendo o bi-trem carregado com 48 mil litros de combustível ( gasolina e diesel) tombou sobre a pista ocasionando interdição da pista nos dois sentido. Houve rompimento dos tanques, provocado vazamento de 500 litros de óleo diesel e 15 mil de litros de gasolina."
+Contexto do Evento: Causa [acidente] -> Fenômeno [tombou]
+Raciocínio: O tombamento gerou impacto em cascata: paralisação do tráfego (interdição), seguido de falha estrutural (rompimento) e liberação de produto ambiental (vazamento). Todas essas são as consequências integradas.
+Extração: "ocasionando interdição da pista nos dois sentido. Houve rompimento dos tanques, provocado vazamento de 500 litros de óleo diesel e 15 mil de litros de gasolina"
+Snippet: "pista <CONSEQUENCIA>ocasionando interdição da pista nos dois sentido. Houve rompimento dos tanques, provocado vazamento de 500 litros de óleo diesel e 15 mil de litros de gasolina</CONSEQUENCIA>. O combustível que"
+
+---
+DADOS PARA EXTRAÇÃO
+Relato da ocorrência: 
+{text}
+Contexto do Evento (Causa e Fenômeno previamente extraídos): 
+{contexto}

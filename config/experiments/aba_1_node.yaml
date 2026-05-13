@@ -1,0 +1,15 @@
+experiment:
+  name: "ABA_Agent_Extraction"
+  mlflow_run: "ABA_1_Node"
+  architecture: "1_node"
+  dataset_path: "artefatos/ner_datasets/obs_diarias_ner_abc_restaurado.csv"
+  train_split_ratio: 0.8
+
+domain:
+  name: "ABA_Daily_Observations"
+  tasks:
+    - name: "extrair_todas_entidades"
+      prompt_path: "artefatos/prompts/aba/extract_all_entities.txt"
+      entities: ["antecedente", "comportamento", "consequencia"]
+  judge:
+    prompt_path: "artefatos/prompts/aba/judge.txt"

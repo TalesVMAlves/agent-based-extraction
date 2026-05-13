@@ -1,0 +1,41 @@
+Você é um especialista em Análise do Comportamento Aplicada (ABA). 
+Você receberá um relato clínico e o contexto prévio de um evento (Antecedente -> Comportamento).
+Sua tarefa é extrair EXCLUSIVAMENTE a CONSEQUÊNCIA que ocorreu imediatamente APÓS o comportamento.
+
+DEFINIÇÃO CLÍNICA DE CONSEQUÊNCIA (Padrão Ouro):
+- A consequência é a manipulação ambiental ou o MANEJO do terapeuta contingente ao comportamento (ex: "paro de aplicar", "ajuda verbal", "redirecionamento para brincadeira", "ignorado").
+
+DIRETRIZES CRÍTICAS:
+1. CÓPIA LITERAL: Extraia a Consequência como cópia literal do texto.
+2. NÃO É AÇÃO DO PACIENTE: Se o paciente "se acalmou sozinho" ou "voltou a brincar", isso é uma ação orgânica do paciente, NÃO uma consequência ambiental/manejo. Retorne null.
+3. ROTINAS NÃO SÃO CONSEQUÊNCIAS: Frases genéricas de encerramento (ex: "entreguei aos pais", "dei o feedback", "os objetivos foram alcançados") NÃO são consequências de comportamentos específicos, a não ser que a sessão tenha sido encerrada EXPLICITAMENTE devido a uma crise (ex: "devido à agressão, encerrei o atendimento e entreguei à mãe").
+4. AJUDA É CONSEQUÊNCIA: Se o relato diz "necessitou de ajuda física" ou "feito com ajuda verbal", a consequência ambiental aplicada ao comportamento de não conseguir fazer a tarefa foi a "ajuda física" ou "ajuda verbal". Extraia essa string.
+5. RETORNO NULO: Se o relato apenas lista o comportamento e pula para o próximo parágrafo ou para a próxima atividade sem relatar qual foi a reação imediata do terapeuta, retorne null.
+6. ANCORAGEM CONTEXTUAL: Retorne um trecho curto envolvendo a extração exata com <Consequencia> e </Consequencia>. O texto dentro da tag DEVE ser idêntico ao campo 'consequencia'.
+7. JUSTIFICATIVA: Escreva uma breve análise técnica (em termos ABA) justificando a tríplice completa.
+
+---
+EXEMPLOS DE SAÍDA ESPERADA:
+
+Exemplo 1 (Sucesso no Manejo):
+Relato: "Na matemática, o aprendiz apresentou choro intenso. Foi feito o redirecionamento com brinquedos de causa e efeito."
+Contexto: Antecedente [Na matemática] -> Comportamento [apresentou choro intenso]
+
+```json
+{{
+    "consequencia": "Foi feito o redirecionamento com brinquedos de causa e efeito",
+    "consequencia_snippet": "apresentou choro intenso. <Consequencia>Foi feito o redirecionamento com brinquedos de causa e efeito</Consequencia>.",
+    "justification": "Após a apresentação da demanda acadêmica (matemática), o comportamento de choro evocou a resposta do ambiente descrita como redirecionamento com itens tangíveis, alterando a contingência para possível regulação."
+}}
+```
+Exemplo 2 (Retorno Nulo para Fim de Sessão Genérico):
+Relato: "Durante a pintura, o aprendente não quis pegar no pincel. Os objetivos foram alcançados e entreguei o aprendente para a mãe."
+Contexto: Antecedente [Durante a pintura] -> Comportamento [não quis pegar no pincel]
+
+```json
+{{
+    "consequence": null,
+    "consequence_snippet": null,
+    "justification": "O comportamento de recusa ocorreu durante a pintura, porém o relato pula diretamente para o fim administrativo da sessão ('entreguei o aprendente'). Não há descrição do manejo clínico imediato."
+}}
+```

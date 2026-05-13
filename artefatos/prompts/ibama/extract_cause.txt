@@ -1,0 +1,85 @@
+# Task Introduction
+Você é um especialista em Investigação de Acidentes e Engenharia de Segurança.
+Sua tarefa é extrair EXCLUSIVAMENTE a CAUSA de um acidente, considerando que o Fenômeno (o ápice do acidente) já foi extraído previamente.
+
+# Evaluation Criteria & Definitions
+- CAUSA (O "Antes"): O evento, condição prévia, erro humano, falha mecânica ou fator climático que ocorreu IMEDIATAMENTE ANTES e engatilhou o Fenômeno.
+- MARCADORES COMUNS: Busque ações ou condições associadas a "devido a", "após", "perdeu o controle", "provocado por", "causado por", "falha de", "rompimento de".
+- PROIBIÇÃO DE SOBREPOSIÇÃO: A Causa NUNCA pode conter as mesmas palavras ou ser o mesmo evento que o Fenômeno. São etapas temporalmente distintas. (Ex: se o Fenômeno for "vazamento de combustível", a causa é o "rompimento da tubulação" ou a "colisão").
+- AUSÊNCIA (NULL): Se o texto for puramente descritivo sobre o acidente em si (ex: "uma carreta tombou e derramou a carga") sem explicar o motivo prévio, a Causa não está no texto. Retorne null. NUNCA invente ou presuma causas que não estão escritas.
+
+# Evaluation Steps (Mental Reasoning)
+1. Leia o relato e observe o[Contexto do Fenômeno] que já foi identificado.
+2. Analise o relato retrocedendo no tempo cronológico: o que causou ou qual era o cenário IMEDIATAMENTE ANTERIOR a este Fenômeno?
+3. Crie um "Raciocínio" para explicar a dinâmica causal.
+4. Se identificar uma causa explícita, extraia a substring literal exata do texto. Se não houver, retorne null.
+5. Crie um snippet de contexto (5 a 10 palavras antes e depois) envolvendo a extração com a tag <CAUSA></CAUSA>.
+
+# Exemplos de Referência (Few-Shot)
+
+Relato: "Ação de vândalo provocou vazamento de 1.700 mil litros de óleo diesel de caminhão. O material ficou em uma valeta próximo a base da Ipiranga. Houve percolação do produto no solo."
+Contexto (Fenômeno): "vazamento de 1.700 mil litros de óleo diesel"
+Raciocínio: O relato diz explicitamente que o vazamento (fenômeno) foi provocado por uma ação intencional prévia. 
+Extração: "Ação de vândalo"
+Snippet: "<CAUSA>Ação de vândalo</CAUSA> provocou vazamento de 1.700 mil"
+
+Relato: "Veículo carregado com 30 toneladas de cal virgem, o motorista perdeu o controle da direção e desceu uma arribanceira aproximadamente de 20 metros caindo dentro do córrego Amaro."
+Contexto (Fenômeno): "desceu uma arribanceira"
+Raciocínio: Antes de descer a ribanceira (fenômeno), o que ocorreu para engatilhar o acidente? A perda de capacidade do condutor de guiar o veículo.
+Extração: "motorista perdeu o controle da direção"
+Snippet: "cal virgem, o <CAUSA>motorista perdeu o controle da direção</CAUSA> e desceu uma arribanceira"
+
+Relato: "Uma explosão em uma concessionária de veículos próximo ao aeroporto de Brasília deixou uma pessoa ferida. O acidente ocorreu no laboratório de tintura da empresa. Na sala onde ocorreu a explosão são manuseados produtos inflamáveis. A suspeita é de que um curto-circuito tenha dado origem ao acidente."
+Contexto (Fenômeno): "explosão em uma concessionária"
+Raciocínio: O fenômeno abre o texto, mas a razão prévia que o engatilhou só é revelada no final como uma suspeita (marcador causal "dado origem ao acidente").
+Extração: "curto-circuito"
+Snippet: "A suspeita é de que um <CAUSA>curto-circuito</CAUSA> tenha dado origem ao acidente."
+
+Relato: "Uma carreta que tracionava o semirreboque carregado com laranjas bateu de frente com o caminhão que estava carregado com dez mil litros de etanol, que provocou o derramamento da carga de combustível."
+Contexto (Fenômeno): "derramamento da carga de combustível"
+Raciocínio: O ápice de segurança (perda de contenção/derramamento) foi causado diretamente por um evento físico violento imediatamente anterior.
+Extração: "bateu de frente com o caminhão"
+Snippet: "carregado com laranjas <CAUSA>bateu de frente com o caminhão</CAUSA> que estava carregado com dez"
+
+Relato: "Um forte odor tomou conta da quadra no Lago Norte, que foi causado por um enorme vazamento de esgoto, que começou após o rompimento de canos de ligação da Estação Elevada da Companhia de Saneamento Ambiental do Distrito Federal (Caesb)."
+Contexto (Fenômeno): "enorme vazamento de esgoto"
+Raciocínio: O vazamento é o evento principal. O marcador "começou após" aponta para a falha mecânica/física anterior que permitiu o vazamento.
+Extração: "rompimento de canos de ligação"
+Snippet: "esgoto, que começou após o <CAUSA>rompimento de canos de ligação</CAUSA> da Estação Elevada"
+
+Relato: "Uma carreta carregada com soda cáustica tombou, grande parte da carga escorreu para a pista, e há uma lagoa próxima ao local. Mas não há notícias sobre um possível contaminação."
+Contexto (Fenômeno): "tombou"
+Raciocínio: O texto descreve o acidente (tombamento) e segue narrando as consequências (carga escorreu, risco à lagoa). O motivo do tombamento (chuva, freio, motorista dormiu, buraco) é totalmente omitido. Não existe causa no texto.
+Extração: null
+Snippet: null
+
+Relato: "O grande volume de precipitação ocorrido no dia 18 de junho na bacia dos Rios Mundaú, ocasionou enchentes em diversos municípios, dentre eles União dos Palmares, onde o Rio teve uma elevação do seu nível e atingiu o pátio da empresa."
+Contexto (Fenômeno): "enchentes em diversos municípios"
+Raciocínio: O evento em si (enchente/elevação do nível) tem um gatilho natural expresso claramente e ligado pelo verbo "ocasionou".
+Extração: "grande volume de precipitação"
+Snippet: "O <CAUSA>grande volume de precipitação</CAUSA> ocorrido no dia 18 de"
+
+Relato: "Abertura de válvula da anm com a surface flow tree devido a erro operacional. o óleo que estava na flowline surgiu na superfície com derramamento no convés da plataforma, ocorrendo derrame de uma parte do petróleo e óleo diesel no mar."
+Contexto (Fenômeno): "Abertura de válvula"
+Raciocínio: O fenômeno "abertura de válvula" tem uma justificativa explícita imediatamente atrelada ao marcador de causa "devido a".
+Extração: "erro operacional"
+Snippet: "surface flow tree devido a <CAUSA>erro operacional</CAUSA>. o óleo que estava na"
+
+Relato: "Um caminhão carregado com 20 mil litros de gasolina e 5 mil litros de álcool tombou. A carreta estava em uma descida quando precisou frear para não bater em um carro que estava em baixa velocidade. O freio do caminhão estourou e o mesmo voltou de ré na pista."
+Contexto (Fenômeno): "tombou"
+Raciocínio: O tombamento ocorreu porque houve uma sucessão de problemas anteriores: o veículo precisou frear em descida, e a falha mecânica primária engatilhou a perda de controle.
+Extração: "freio do caminhão estourou"
+Snippet: "baixa velocidade. O <CAUSA>freio do caminhão estourou</CAUSA> e o mesmo voltou de"
+
+Relato: "O motorista de um caminhão que transportava herbicida dormiu na direção, provocando o tombamento do veículo na entrada de uma ponte. O caminhão transportava glifosato, um tipo de agrotóxico."
+Contexto (Fenômeno): "tombamento do veículo"
+Raciocínio: O verbo "provocando" estabelece o elo causal. O ato que antecedeu e gerou o tombamento foi uma limitação física do condutor.
+Extração: "dormiu na direção"
+Snippet: "transportava herbicida <CAUSA>dormiu na direção</CAUSA>, provocando o tombamento do veículo"
+
+---
+DADOS PARA EXTRAÇÃO
+Relato da ocorrência:
+{text}
+Contexto do Evento prévio (Fenômeno):
+{contexto}
