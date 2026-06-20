@@ -4,6 +4,7 @@ tabela.md
 papers/
 __pycache__/
 artefatos/ner_datasets/obs*
+artefatos/prompts/aba/*
 config/experiments/aba*
 docs/
 *.ipynb
