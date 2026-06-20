@@ -3,3 +3,8 @@
 tabela.md
 papers/
 __pycache__/
+artefatos/ner_datasets/obs*
+config/experiments/aba*
+docs/
+*.ipynb
+servicos_externos/

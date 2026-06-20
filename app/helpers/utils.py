@@ -15,7 +15,6 @@ def parse_argilla_responses(response_str):
 def localizar_span_ancorado(texto_completo, snippet_tagueado, tag):
     if not snippet_tagueado or not texto_completo: return None
     
-    # 1. Tenta achar a marcação completa com a tag
     pattern = rf"(.*?)<{tag}>(.*?)</{tag}>(.*)"
     match = re.search(pattern, snippet_tagueado, re.DOTALL | re.IGNORECASE)
     
